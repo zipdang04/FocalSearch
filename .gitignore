@@ -1,3 +1,8 @@
+.vscode/*
+build/
+*.inp
+log.txt
+
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
