@@ -121,6 +121,12 @@ class BoardState {
 					return board[i] < state.board[i];
 			return false;
 		}
+		bool operator > (const BoardState &state) const {
+			for (int i = 0; i < MAX_VALUE; i++)
+				if (board[i] != state.board[i])
+					return board[i] > state.board[i];
+			return false;
+		}
 		
 		
 		bool isFinished() {

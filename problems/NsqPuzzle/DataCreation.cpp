@@ -4,21 +4,25 @@
 #include <bits/stdc++.h>
 #include "Puzzle.h"
 std::string getTimeCode() {
-	auto current_time = time(nullptr);
-	auto local_time = localtime(&current_time);
-	std::string year = std::to_string(local_time -> tm_year + 1900);
-	std::string month = std::to_string(local_time -> tm_mon + 1);
-	std::string day = std::to_string(local_time -> tm_mday);
-	std::string hour = std::to_string(local_time -> tm_hour);
-	std::string minute = std::to_string(local_time -> tm_min);
-	std::string second = std::to_string(local_time -> tm_sec);
-	while (month.length() < 2) month = "0" + month;
-	while (day.length() < 2) day = "0" + day;
-	while (hour.length() < 2) hour = "0" + hour;
-	while (minute.length() < 2) minute = "0" + minute;
-	while (second.length() < 2) second = "0" + second;
-	std::cerr << year << ' ' << month << ' ' << day << ' ' << hour << ' ' << minute << ' ' << second << std::endl;
-	return std::format("{}{}{}-{}{}{}", year, month, day, hour, minute, second);
+	auto curTime = std::chrono::current_zone() -> to_local(std::chrono::high_resolution_clock::now());
+	// int microseconds = std::chrono::duration_cast<std::chrono::microseconds>(curTime.time_since_epoch()).count();
+	return std::format("{:%Y%m%d-%H%M%S}", curTime);
+	
+	
+	// auto current_time = time(nullptr);
+	// auto local_time = localtime(&current_time);
+	// std::string year = std::to_string(local_time -> tm_year + 1900);
+	// std::string month = std::to_string(local_time -> tm_mon + 1);
+	// std::string day = std::to_string(local_time -> tm_mday);
+	// std::string hour = std::to_string(local_time -> tm_hour);
+	// std::string minute = std::to_string(local_time -> tm_min);
+	// std::string second = std::to_string(local_time -> tm_sec);
+	// while (month.length() < 2) month = "0" + month;
+	// while (day.length() < 2) day = "0" + day;
+	// while (hour.length() < 2) hour = "0" + hour;
+	// while (minute.length() < 2) minute = "0" + minute;
+	// while (second.length() < 2) second = "0" + second;
+	// return std::format("{}{}{}-{}{}{}", year, month, day, hour, minute, second);
 }
 
 main(int argc, char** argv) {
@@ -28,12 +32,11 @@ main(int argc, char** argv) {
 
 	int shuffle_steps = opt<int>("ctrl", 0);
 	
-	std::cerr << "oke\n";
 	
 	std::string prefix = std::format("NSQ-n{}", SZ_N);
 	if (shuffle_steps > 0) prefix += std::format("-ctrl{}", shuffle_steps);
 	std::string filename = prefix + std::format("_{}.inp", getTimeCode());
-	std::cerr << "oke " << filename << std::endl;
+	std::cerr << "filename: " << filename << std::endl;
 	std::ofstream ofs(filename);
 	
 	ofs << SZ_N << std::endl;
@@ -54,7 +57,6 @@ main(int argc, char** argv) {
 			do {move = all[rnd.next(0, 3)];}
 			while (move == (prv + 2) % 4);
 			prv = move;
-			std::cerr << move << '\n';
 
 			try {
 				BoardState tmp = BoardState::move(state, move);

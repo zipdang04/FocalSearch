@@ -6,10 +6,10 @@ class AStar: public PuzzleAlgorithm {
 	private:
 		struct Data{
 			BoardState state;
-			int value;
-			Data(BoardState state, int value): state(state), value(value) {}
-			bool operator < (Data a) const { return value < a.value; }
-			bool operator > (Data a) const { return value > a.value; }
+			int f, g;
+			Data(BoardState state, int f, int g): state(state), f(f), g(g) {}
+			bool operator < (Data a) const { return f != a.f ? f < a.f : g < a.g; }
+			bool operator > (Data a) const { return f != a.f ? f > a.f : g > a.g; }
 		};
 		std::priority_queue<Data, std::vector<Data>, std::greater<Data>> pq;
 		std::unordered_map<BoardState, int> f;
@@ -22,19 +22,19 @@ class AStar: public PuzzleAlgorithm {
 		void execute() override {
 
 			result[initialState] = 0; 
-			f[initialState] = default_heuristic(initialState);
+			f[initialState] = heuristic(initialState);
 			action[initialState] = STOP;
-			pq.emplace(initialState, f[initialState]);
+			pq.emplace(initialState, f[initialState], 0);
 
 			// int ptr = 0;
 			while (!pq.empty()) {
 				// if (++ptr == 2) {
 				// if (++ptr == 100'000) {
-					// std::cerr << pq.size() << ' ' << pq.top().value << ' ' << result[pq.top().state] << '\n';
+					// std::cerr << pq.size() << ' ' << pq.top().f << ' ' << result[pq.top().state] << '\n';
 				// 	ptr = 0;
 				// }
 				Data cur = pq.top(); pq.pop();
-				if (f[cur.state] != cur.value) continue;
+				if (f[cur.state] != cur.f) continue;
 				if (cur.state.isFinished()) break;
 				int curResult = result[cur.state];
 				
@@ -63,7 +63,7 @@ class AStar: public PuzzleAlgorithm {
 						result[newState] = newResult;
 						action[newState] = move;
 						f[newState] = newResult + heuristic(newState);
-						pq.emplace(newState, f[newState]);
+						pq.emplace(newState, f[newState], result[newState]);
 					}
 				}
 			}

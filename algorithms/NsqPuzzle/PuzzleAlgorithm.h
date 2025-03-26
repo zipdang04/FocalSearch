@@ -22,7 +22,6 @@ class PuzzleAlgorithm: public Algorithm {
 			while (true) {
 				BoardMove move = action[state];
 				if (move == STOP) break;
-				// std:: cerr << state << ' ' << move << ' ';
 
 				switch (move)
 				{

@@ -18,7 +18,7 @@ class Algorithm{
 
 		double measure() {
 			auto beginTime = std::chrono::high_resolution_clock::now().time_since_epoch();
-			execute(); hasRun = true; std::cerr << "done!\n";
+			execute(); hasRun = true;
 			auto endTime = std::chrono::high_resolution_clock::now().time_since_epoch();
 			auto duration = endTime - beginTime;
 			long long count = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
